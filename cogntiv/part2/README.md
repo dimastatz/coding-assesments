@@ -41,7 +41,7 @@ Reduce Complexity !!!
 ## High-Level Design
 <table width="256px">
   <tr>
-    <td><img src="./images/architecture.png" /></td>
+    <td><img src="./images/arch.png" /></td>
   </tr>
 </table>
 
