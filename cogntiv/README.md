@@ -5,4 +5,4 @@ Using this exercise, we would like to learn about your software engineering and 
 
 ## Solution
 - [Part 1: Python Multiprocessing](./part1/README.md)
-- [Part 2: Data pipeline architecture]()
+- [Part 2: Data pipeline architecture](./part2/README.md)
