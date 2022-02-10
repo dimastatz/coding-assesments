@@ -36,7 +36,7 @@ model)
     - Short written descriptions of each choice of technology (e.g. database).
 
 ## System APIs
-Reduce Complexity !!!
+[TBD]()
 
 ## High-Level Design
 <table width="256px">
@@ -46,7 +46,16 @@ Reduce Complexity !!!
 </table>
 
 ## Detailed Design 
-Design main components (OOD can help)
+
+### Data Collection Tier
+
+
+### Data Ingestion Tier
+
+### Data Processing Tier
+
+### Data Consumption Tier
+
 
 ## Analysis
 - Cost
