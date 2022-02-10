@@ -38,11 +38,15 @@ model)
 ## System APIs
 Reduce Complexity
 
-## High Level Design
-Define main componance and data flows 
+## High-Level Design
+<table width="256px">
+  <tr>
+    <td><img src="../images/architecture.png" /></td>
+  </tr>
+</table>
 
 ## Detailed Design 
-Design the main components (OOD can help)
+Design main components (OOD can help)
 
 ## Analysis
 - Cost
