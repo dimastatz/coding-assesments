@@ -65,7 +65,7 @@ Data Collection Tier is all about collecting log files from the client machines.
 The Data Ingestion Tier consists of three components - [API Gateway](https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html), [AWS Lambda](https://aws.amazon.com/lambda/) and [AWS S3](https://aws.amazon.com/s3/). This tier is responsible for data delivery to the S3 bucket. The main concern when delivering the data to the private S3 bucket in the [AWS VPC](https://aws.amazon.com/vpc/) is security and reliability
 - Only known clients can upload files to the S3 bucket
 - S3 objects are immutable (read-only), cannot be overwritten
-- The S3 upload is reliable. The failed upload session will be tracked and retried. All fatal failures will be tracked in [aws cloudwatch](https://aws.amazon.com/cloudwatch/)
+- The S3 upload is reliable. The failed upload session will be tracked and retried. All fatal failures will be tracked in [AWS CloudWatch](https://aws.amazon.com/cloudwatch/)
 
 
 ### Data Processing Tier
