@@ -59,6 +59,7 @@ The Layered Architecture approach promotes separation of concerns and flexibilit
 ## Detailed Design 
 
 ### Data Collection Tier
+Data Collection Tier is all about collecting log files from the client machines. The flow is simple - each client machine will be preinstalled with the log shipping software like [fluentd](https://www.fluentd.org/), [logstash](https://www.elastic.co/logstash/) or custom made log shipper that is activated by a [chron job](https://en.wikipedia.org/wiki/Cron). It is better to rely on open-source software since most log shipping problems are solved there (reliability, performance, extensibility, etc). So, the log shipper will watch a certain directory for new logs, and once log files are ready, it will request the Data Ingestion API to provide the pre-signed S3 Url and will upload files to the S3 bucket.
 
 ### Data Ingestion Tier
 
