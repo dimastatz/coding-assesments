@@ -42,10 +42,10 @@ model)
   - uploadData(presignedS3Url): uploads file to S3 using [presigned](https://docs.aws.amazon.com/AmazonS3/latest/userguide/PresignedUrlUploadObject.html) URL
 - Data Consumption
   - getObjectLists(query): returns the list of s3 object urls by the query criteria
-  - getListOfrecordingSessions(): returns the list of all preprocessed recorded session
+  - getRecordingSessions(from, to): returns the list of preprocessed recorded session by date range
 
 ## High-Level Design
-The proposed architecture is a stack of five logical tiers (layers): data collection, data ingestion, data processing, and data consumption. Each layer consists of multiple components.   
+The proposed architecture is a stack of five logical tiers (layers): data collection, data ingestion, data processing, data consumption and infrastructure. Each layer consists of multiple components.   
 
 <table width="256px">
   <tr>
@@ -59,7 +59,7 @@ The Layered Architecture approach promotes separation of concerns and flexibilit
 ## Detailed Design 
 
 ### Data Collection Tier
-Data Collection Tier is all about collecting log files from the client machines. The flow is simple - each client machine will be preinstalled with the log shipping software like [fluentd](https://www.fluentd.org/), [logstash](https://www.elastic.co/logstash/) or custom made log shipper that is activated by a [chron job](https://en.wikipedia.org/wiki/Cron). It is better to rely on open-source software since most log shipping problems are solved there (reliability, performance, extensibility, etc). So, the log shipper will watch a certain directory for new logs, and once log files are ready, it will request the Data Ingestion API to provide the pre-signed S3 Url and will upload files to the S3 bucket.
+Data Collection Tier is all about collecting log files from the client machines. The flow is simple - each client machine will be preinstalled with the log shipping software like [fluentd](https://www.fluentd.org/), [logstash](https://www.elastic.co/logstash/) or custom made log shipper that is activated by a [chron job](https://en.wikipedia.org/wiki/Cron). It is better to rely on open-source software like logstash and fluentd, since most log shipping problems are solved there (reliability, performance, extensibility, etc). So, the log shipper will watch a certain directory for new logs, and once log files are ready, it will request the Data Ingestion API to provide the pre-signed S3 url and will upload files to the S3 bucket.
 
 ### Data Ingestion Tier
 The Data Ingestion Tier consists of three components - [API Gateway](https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html), [AWS Lambda](https://aws.amazon.com/lambda/) and [AWS S3](https://aws.amazon.com/s3/). This tier is responsible for the data delivery to the S3 bucket. The main concern when delivering the data to the private S3 bucket in the [AWS VPC](https://aws.amazon.com/vpc/) is security and reliability
@@ -88,11 +88,11 @@ The core component of the data processing tier is the database that stores the m
 - Capacity: AWS Redshift is the columnar storage and can be easily scaled to handle big volumes (Petabytes) of data
 - Efficiency: AWS Redshift separates compute and storage, and thus is flexible and can be optimized for any data flow requirements.   
 - Cost: when dealing with the low volumes of data and low numbers of requests, we can use the [serverless](https://aws.amazon.com/blogs/aws/introducing-amazon-redshift-serverless-run-analytics-at-any-scale-without-having-to-manage-infrastructure/) version of the Redshift. By doing so, we can keep the overall cost of the database low
-- Test: AWS Redshift is based on PostgreSQL and thus is replaceable by PostgreSQL DB for test purposes. For example, when running the e2e in the SandBox.  
-The last component of the Data Processing Tier is the Reporting API that is implmented by the API Gateway and AWS Lambda. For separation of concerns, we do not expose the database to data consumers. The data schema is the matter of change. It can be changed as a result of adding new datasource or as a result of db optimization activities. And thus, the only component that actually access the reporting code that runs in AWS Lambda that is invked by the API .  
+- Test: AWS Redshift is based on PostgreSQL and thus is replaceable by PostgreSQL DB for test purposes. For example, when running the e2e in the SandBox.
 
 ### Data Consumption Tier
-Data Consumption Tier consist of provisioned EC2 machines. Data researches are using these machines to run ML pipelines and data analysis code. They can access the metadata in redshift by using the Reporting API. The data in S3 can be accessed directly once the S3 url is obtained for the 
+The last component of the Data Processing Tier is the Reporting API that is implmented by the API Gateway and AWS Lambda. For separation of concerns, we do not expose the database to data consumers. The data schema is the matter of change. It can be changed as a result of adding new datasource or as a result of db optimization activities. And thus, the only component that actually access the reporting code that runs in AWS Lambda that is invked by the API 
+Data Consumption Tier consist of provisioned EC2 machines. Data researches are using these machines to run ML pipelines and data analysis code. They can access the metadata in Redshift by using the Reporting API. The data in S3 can be accessed directly once the S3 url is obtained from the Reporting API. 
 
 
 
