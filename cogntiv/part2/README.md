@@ -38,8 +38,8 @@ model)
 ## System APIs
 - Data Ingestion
   - authenticate(apiKey): returns [token](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-control-access-to-api.html) for upcoming operations  
-  - getPresignedS3Url(token, fileName): return [presign](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-presigned-url.html) s3 url 
-  - uploadData(presignedS3Url): uploads file to S3 using [presigned Url](https://docs.aws.amazon.com/AmazonS3/latest/userguide/PresignedUrlUploadObject.html)
+  - getPresignedS3Url(token, fileName): return [presigned](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-presigned-url.html) s3 url 
+  - uploadData(presignedS3Url): uploads file to S3 using [presigned](https://docs.aws.amazon.com/AmazonS3/latest/userguide/PresignedUrlUploadObject.html) URL
 - Data Consumption
   - getObjectLists(query): returns the list of s3 object urls by the query criteria
   - getListOfrecordingSessions(): returns the list of all preprocessed recorded session
