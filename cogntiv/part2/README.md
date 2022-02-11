@@ -41,6 +41,8 @@ model)
   - getPresignedS3Url(token, fileName): return [presign](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-presigned-url.html) s3 url 
   - uploadData(presignedS3Url): uploads file to S3 using [presigned Url](https://docs.aws.amazon.com/AmazonS3/latest/userguide/PresignedUrlUploadObject.html)
 - Data Consumption
+  - getObjectLists(query): returns the list of s3 object urls by the query criteria
+  - getListOfrecordingSessions(): returns the list of all preprocessed recorded session
 
 ## High-Level Design
 The proposed architecture is a stack of five logical tiers (layers): data collection, data ingestion, data processing, and data consumption. Each layer consists of multiple components.   
