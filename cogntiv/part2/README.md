@@ -37,7 +37,7 @@ model)
 
 ## System APIs
 - Data Ingestion
-  - authenticate(apiKey): returns [token](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-control-access-to-api.html) for upcoming operations  
+  - authenticate(apiKey): returns [token](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-jwt-authorizer.html) for upcoming operations  
   - getPresignedS3Url(token, fileName): return [presigned](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-presigned-url.html) s3 url 
   - uploadData(presignedS3Url): uploads file to S3 using [presigned](https://docs.aws.amazon.com/AmazonS3/latest/userguide/PresignedUrlUploadObject.html) URL
 - Data Consumption
@@ -73,16 +73,18 @@ The Data Ingestion Tier consists of three components - [API Gateway](https://doc
   </tr>
 </table>
 
-The only implementation that needed in this tier is in AWS Lambda. AWS Lambda is responsible for validating api keys and generating pre-signed S3 urls by using [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/s3-presigned-urls.html). AWS API Gateway will take care of providing public REST API, performing the IP whitelisting, IP rate limits and handling HTTPs [certificates](https://docs.aws.amazon.com/apigateway/latest/developerguide/getting-started-client-side-ssl-authentication.html). And finally, when the authenticated flow is done and pre-signed s3 url is ready, the log shipper will be able to upload the files to the private S3 bucket for 'raw data'. The data in the bucket will be partitioned by recording session id. For eample it can be stored in s3://cogntiv_raw_data/20210229_161221/.  
+The only implementation that needed in this tier is in AWS Lambda. AWS Lambda is responsible for validating api keys and generating pre-signed S3 urls by using [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/s3-presigned-urls.html). AWS API Gateway will take care of providing public REST API, performing the IP whitelisting, IP rate limits and handling HTTPs [certificates](https://docs.aws.amazon.com/apigateway/latest/developerguide/getting-started-client-side-ssl-authentication.html). And finally, when the authenticated flow is done and pre-signed s3 url is ready, the log shipper will be able to upload the files to the private S3 bucket for 'raw data'. The data in the bucket will be partitioned by recording session id. For eample it can be stored in s3://cogntiv_raw_data/20210229_161221/. [New_Object_Created](https://docs.aws.amazon.com/AmazonS3/latest/userguide/NotificationHowTo.html) notification is enabled on the raw_data bucket and it is used in the Data Processing Tier.
 
 
 ### Data Processing Tier
+Data Processing Tier contains all the logic that performs cleaning, pre-processing, and aggregation of the input data. When the new metadata file lands in the raw_data S3 bucket the [New_Object_Created](https://docs.aws.amazon.com/AmazonS3/latest/userguide/NotificationHowTo.html) notification [invokes](https://docs.aws.amazon.com/AmazonS3/latest/userguide/how-to-enable-disable-notification-intro.html) AWS Lambda function. As in Data Ingestion Tier, all the needed logic resided in the AWS Lambda function. The choice between the AWS Lambda, provisioned EC2, and the Fargate, is explained in the Cost Analysis section. So once the metadata file lands in the raw_data bucket, the AWS Lambda is launched. AWS Lambda validates the content of metadata. If the content is broken or illegal, the error notification goes to the AWS Cloudwatch. If the data is legal, the AWS Lambda function parses it and inserts it to the [AWS Redshift](https://aws.amazon.com/redshift/)  
 
-### Data Consumption Tier
+## CI/CD and Testing
+[TBD]
 
 ## Monitoring and Alerting
+[TBD]
 
-## CI/CD and Tesing
 
 ## Analysis
 - Cost
