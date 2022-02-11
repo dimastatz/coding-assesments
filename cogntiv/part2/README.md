@@ -63,7 +63,7 @@ Data Collection Tier is all about collecting log files from the client machines.
 
 ### Data Ingestion Tier
 The Data Ingestion Tier consists of three components - [API Gateway](https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html), [AWS Lambda](https://aws.amazon.com/lambda/) and [AWS S3](https://aws.amazon.com/s3/). This tier is responsible for the data delivery to the S3 bucket. The main concern when delivering the data to the private S3 bucket in the [AWS VPC](https://aws.amazon.com/vpc/) is security and reliability
-- Only known clients can upload files to the S3 bucket
+- Only authenticated clients can upload files to the S3 bucket
 - S3 objects are immutable (read-only), cannot be overwritten
 - The S3 upload is reliable. The failed upload session will be tracked and retried. All fatal failures will be tracked in [AWS CloudWatch](https://aws.amazon.com/cloudwatch/)
 
@@ -73,11 +73,16 @@ The Data Ingestion Tier consists of three components - [API Gateway](https://doc
   </tr>
 </table>
 
+The only implementation that needed in this tier is in AWS Lambda. AWS Lambda is responsible for validating api keys and generating pre-signed S3 urls by using [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/s3-presigned-urls.html). AWS API Gateway will take care of providing public REST API, performing the IP whitelisting, IP rate limits and handling HTTPs [certificates](https://docs.aws.amazon.com/apigateway/latest/developerguide/getting-started-client-side-ssl-authentication.html). And finally, when the authenticated flow is done and pre-signed s3 url is ready, the log shipper will be able to upload the files to the private S3 bucket for 'raw data'. The data in the bucket will be partitioned by recording session id. For eample it can be stored in s3://cogntiv_raw_data/20210229_161221/.  
+
 
 ### Data Processing Tier
 
 ### Data Consumption Tier
 
+## Monitoring and Alerting
+
+## CI/CD and Tesing
 
 ## Analysis
 - Cost
