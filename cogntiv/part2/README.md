@@ -92,7 +92,7 @@ The core component of the data processing tier is the database that stores the m
 The last component of the Data Processing Tier is the Reporting API that is implmented by the API Gateway and AWS Lambda. For separation of concerns, we do not expose the database to data consumers. The data schema is the matter of change. It can be changed as a result of adding new datasource or as a result of db optimization activities. And thus, the only component that actually access the reporting code that runs in AWS Lambda that is invked by the API .  
 
 ### Data Consumption Tier
-Data Consumption Tier consist of provisioned EC2 machines. Data researches are using these machines to run ML pipelines and data analysis code. They can access the metadata in redshift by using REST API (AWS Lambda) and they can get access to the S3 directly    
+Data Consumption Tier consist of provisioned EC2 machines. Data researches are using these machines to run ML pipelines and data analysis code. They can access the metadata in redshift by using the Reporting API. The data in S3 can be accessed directly once the S3 url is obtained for the 
 
 
 
