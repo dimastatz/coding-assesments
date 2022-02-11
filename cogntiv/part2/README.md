@@ -36,7 +36,11 @@ model)
     - Short written descriptions of each choice of technology (e.g. database).
 
 ## System APIs
-[TBD]()
+- Data Ingestion
+  - authenticate(apiKey): returns [token](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-control-access-to-api.html) for upcoming operations
+  = getPresignedS3Url(token, fileName): return [presign](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-presigned-url.html) s3 url 
+  - uploadData(presignedS3Url): uploads file to S3 using [presigned Url](https://docs.aws.amazon.com/AmazonS3/latest/userguide/PresignedUrlUploadObject.html)
+- Data Consumption
 
 ## High-Level Design
 The proposed architecture is a stack of five logical tiers (layers): data collection, data ingestion, data processing, and data consumption. Each layer consists of multiple components.   
