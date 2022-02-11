@@ -84,10 +84,11 @@ Data Processing Tier contains all the logic that performs cleaning, pre-processi
   </tr>
 </table>
 
-The core component of the data processing tier is the database that sores the metadata. Our choise is the AWS Redshift. AWS Redshift has the following pros:
-- AWS Redshift is the columnar storage and can be easily scaled to handle big volumes of data
-- When dealing with the low volumes of data and low numbers if requests, we can use the [serverless](https://aws.amazon.com/blogs/aws/introducing-amazon-redshift-serverless-run-analytics-at-any-scale-without-having-to-manage-infrastructure/) version of the Redshift. By doing so, we can keep the overall cost of the database low
-- AWS Redshift is based on PostgreSQL and thus can be replaced by the PostgreSQL for the test pupropses. For example when running the e2e in the SandBox.  
+The core component of the data processing tier is the database that stores the metadata. Our choice is the AWS Redshift. AWS Redshift has the following pros:
+- Capacity: AWS Redshift is the columnar storage and can be easily scaled to handle big volumes (Petabytes) of data
+- Efficiency: AWS Redshift separates compute and storage, and thus is flexible and can be optimized for any data flow requirements.   
+- Cost: when dealing with the low volumes of data and low numbers of requests, we can use the [serverless](https://aws.amazon.com/blogs/aws/introducing-amazon-redshift-serverless-run-analytics-at-any-scale-without-having-to-manage-infrastructure/) version of the Redshift. By doing so, we can keep the overall cost of the database low
+- Test: AWS Redshift is based on PostgreSQL and thus is replaceable by PostgreSQL DB for test purposes. For example, when running the e2e in the SandBox.  
 
 
 ## CI/CD and Testing - TBD
