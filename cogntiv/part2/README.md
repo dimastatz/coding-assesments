@@ -89,8 +89,10 @@ The core component of the data processing tier is the database that stores the m
 - Efficiency: AWS Redshift separates compute and storage, and thus is flexible and can be optimized for any data flow requirements.   
 - Cost: when dealing with the low volumes of data and low numbers of requests, we can use the [serverless](https://aws.amazon.com/blogs/aws/introducing-amazon-redshift-serverless-run-analytics-at-any-scale-without-having-to-manage-infrastructure/) version of the Redshift. By doing so, we can keep the overall cost of the database low
 - Test: AWS Redshift is based on PostgreSQL and thus is replaceable by PostgreSQL DB for test purposes. For example, when running the e2e in the SandBox.  
-The last component of the Data Processing Tier is API Gateway. We used as a facade 
+The last component of the Data Processing Tier is the Reporting API that is implmented by the API Gateway and AWS Lambda. For separation of concerns, we do not expose the database to data consumers. The data schema is the matter of change. It can be changed as a result of adding new datasource or as a result of db optimization activities. And thus, the only component that actually access the reporting code that runs in AWS Lambda that is invked by the API .  
 
+### Data Consumption Tier
+Data Consumption Tier consist of provisioned EC2 machines. Data researches are using these machines to run ML pipelines and data analysis code. They can access the metadata in redshift by using REST API (AWS Lambda) and they can get access to the S3 directly    
 
 
 
