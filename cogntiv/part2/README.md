@@ -77,7 +77,18 @@ The only implementation that is needed in this tier is in AWS Lambda. AWS Lambda
 
 
 ### Data Processing Tier
-Data Processing Tier contains all the logic that performs cleaning, pre-processing, and aggregation of the input data. When the new metadata file lands in the raw_data S3 bucket the [New_Object_Created](https://docs.aws.amazon.com/AmazonS3/latest/userguide/NotificationHowTo.html) notification [invokes](https://docs.aws.amazon.com/AmazonS3/latest/userguide/how-to-enable-disable-notification-intro.html) AWS Lambda function. As in Data Ingestion Tier, all the needed logic resided in the AWS Lambda function. The choice between the AWS Lambda, provisioned EC2, and the Fargate, is explained in the Cost Analysis section. So once the metadata file lands in the raw_data bucket, the AWS Lambda is launched. AWS Lambda validates the content of metadata. If the content is broken or illegal, the error notification goes to the AWS Cloudwatch. If the data is legal, the AWS Lambda function parses it and inserts it to the [AWS Redshift](https://aws.amazon.com/redshift/). 
+Data Processing Tier contains all the logic that performs cleaning, pre-processing, and aggregation of the input data. When the new metadata file lands in the raw_data S3 bucket the [New_Object_Created](https://docs.aws.amazon.com/AmazonS3/latest/userguide/NotificationHowTo.html) notification [invokes](https://docs.aws.amazon.com/AmazonS3/latest/userguide/how-to-enable-disable-notification-intro.html) AWS Lambda function. As in Data Ingestion Tier, all the needed logic resided in the AWS Lambda function. The choice between the AWS Lambda, provisioned EC2, and the Fargate, is explained in the Cost Analysis section. So once the metadata file lands in the raw_data bucket, the AWS Lambda is launched. AWS Lambda validates the content of metadata. If the content is broken or illegal, the error notification goes to the AWS Cloudwatch. If the data is legal, the AWS Lambda function parses it and inserts it to the [AWS Redshift](https://aws.amazon.com/redshift/). In case of the binary data, it is just copied to the processed_data S3 bucket.
+<table width="256px">
+  <tr>
+    <td><img src="./images/data-ingest.png" /></td>
+  </tr>
+</table>
+
+The core component of the data processing tier is the database that sores the metadata. Our choise is the AWS Redshift. AWS Redshift has the following pros:
+- AWS Redshift is the columnar storage and can be easily scaled to handle big volumes of data
+- When dealing with the low volumes of data and low numbers if requests, we can use the [serverless](https://aws.amazon.com/blogs/aws/introducing-amazon-redshift-serverless-run-analytics-at-any-scale-without-having-to-manage-infrastructure/) version of the Redshift. By doing so, we can keep the overall cost of the database low
+- AWS Redshift is based on PostgreSQL and thus can be replaced by the PostgreSQL for the test pupropses. For example when running the e2e in the SandBox.  
+
 
 ## CI/CD and Testing - TBD
 - [Github](https://github.com)
@@ -92,10 +103,13 @@ Data Processing Tier contains all the logic that performs cleaning, pre-processi
 
 ## Monitoring and Alerting - TBD
 - [AWS Cloudwatch](https://aws.amazon.com/cloudwatch/)
+- Flow Error Handling: all steps in the data flow 
 - Metrics Dashboards - TBD
 - Alerting [TBD]  
 [TBD]
 
+
+## Cost
 
 ## Analysis
 - Cost
