@@ -49,7 +49,7 @@ The proposed architecture is a stack of five logical tiers (layers): data collec
 
 <table width="256px">
   <tr>
-    <td><img src="./images/arch.png" /></td>
+    <td><img src="./images/architecture.png" /></td>
   </tr>
 </table>
 
