@@ -82,18 +82,19 @@ Data Processing Tier contains all the logic that performs cleaning, pre-processi
 ## CI/CD and Testing - TBD
 - [Github](https://github.com)
 - [CircleCI](https://github.com/marketplace/circleci)
-- [Untitesting] - min of 90% coverage
-- [Code Style Checking]()
-- [Sand Box for E2E]()
-- [Staging Environment]()
-- [Production Environment]()
-- [Infra as Code - Terraform]() 
+- [Untitesting]() - min of 90% coverage [TBD]
+- [Code Style Checking]() [TBD]
+- [SandBox for E2E]() [TBD]
+- [Staging Environment]() [TBD]
+- [Production Environment]() [TBD]
+- [Infra as Code - Terraform]() [TBD]
 [TBD]
 
 ## Monitoring and Alerting - TBD
 - [AWS Cloudwatch](https://aws.amazon.com/cloudwatch/)
 - [Metrics Dashboards]()
 - [Alerting]
+[TBD]
 
 
 ## Analysis
