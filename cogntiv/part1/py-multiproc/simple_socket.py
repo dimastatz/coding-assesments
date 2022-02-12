@@ -4,7 +4,7 @@ from queue import Queue
 
 
 class SimpleSocket():
-    def __init__(self, queue: Queue = queue.Queue()) -> None:
+    def __init__(self, queue: Queue = queue.Queue()):
         self.port = 7777
         self.host = '127.0.0.1'
         self.stop_server = False

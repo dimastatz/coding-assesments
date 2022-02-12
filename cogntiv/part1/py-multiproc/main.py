@@ -1,19 +1,22 @@
+import sys
 import time
 import signal
+import numpy as np
 from multiprocessing import Pool
 from simple_socket import SimpleSocket
 from simple_analyzer import SimpleAnalyzer
 
 
-def generate(noise_enabled=False): 
+def generate(is_noisy: bool): 
     socket = SimpleSocket()
     analyzer = SimpleAnalyzer()
     while True:
         start = time.time()
-        for vector in analyzer.generate():
-            socket.send_message(vector)
+        rand = np.random.randint(100, size=1)[0]
+        if not is_noisy or rand > 2:
+            for vector in analyzer.generate():
+                socket.send_message(vector)
         span = time.time() - start
-        print('bunch send {}'.format(span))
         time.sleep(1 - span)
     
 
@@ -29,15 +32,17 @@ def initializer():
 
 if __name__ == "__main__":
     try:
+        is_noisy = sys.argv[1] if len(sys.argv) > 1 else False
+    
         pool = Pool(2, initializer=initializer)
         pool.apply_async(aggregate)
-        pool.apply_async(generate)
+        pool.apply_async(generate, kwds={'is_noisy': is_noisy})
         pool.close()
-        input("Hit enter to terminate")
+        input("Hit enter to terminate \n")
     except KeyboardInterrupt:
         pass
     finally:
         pool.terminate()
         pool.join()        
-        print("Bye have a great time!")
+        print("Py-Multiproc Test is Exiting!")
     
