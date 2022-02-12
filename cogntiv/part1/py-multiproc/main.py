@@ -1,38 +1,43 @@
 import time
 import signal
-import queue
-from multiprocessing import Process
+from multiprocessing import Pool
 from simple_socket import SimpleSocket
+from simple_analyzer import SimpleAnalyzer
 
 
-def generate(noise_enabled=False):  
+def generate(noise_enabled=False): 
     socket = SimpleSocket()
+    analyzer = SimpleAnalyzer()
     while True:
-        for i in range(1000):
-            socket.send_message(b'hello world')
-        print('bunch send')
-        time.sleep(1)
+        start = time.time()
+        for vector in analyzer.generate():
+            socket.send_message(vector)
+        span = time.time() - start
+        print('bunch send {}'.format(span))
+        time.sleep(1 - span)
     
 
-
-def aggregate(host='127.0.0.1', port=65432):
-    q = queue.Queue()
-    socket = SimpleSocket(q)
+def aggregate():
+    analyzer = SimpleAnalyzer(True)
+    socket = SimpleSocket(analyzer.queue)
     socket.start_server()
    
-    
-def main():
-    try:
-        Process(target=aggregate, name='aggregator').start()
-        Process(target=generate, name='generator').start()
-    except:
-        exit(0)
 
-def exit_handler(signum, frame):
-    print('Ctrl+Z pressed, but ignored {} {}'.format(signum, frame))
-    exit(0)
+def initializer():
+    signal.signal(signal.SIGINT, signal.SIG_IGN)
+
 
 if __name__ == "__main__":
-    signal.signal(signal.SIGTSTP, exit_handler)
-    main()
+    try:
+        pool = Pool(2, initializer=initializer)
+        pool.apply_async(aggregate)
+        pool.apply_async(generate)
+        pool.close()
+        input("Hit enter to terminate")
+    except KeyboardInterrupt:
+        pass
+    finally:
+        pool.terminate()
+        pool.join()        
+        print("Bye have a great time!")
     

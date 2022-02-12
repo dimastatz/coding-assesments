@@ -25,6 +25,4 @@ class SimpleSocket():
                 data = conn.recv(1024)
                 if data:
                     self.queue.put(data)
-                    if self.queue.qsize() % 100 == 0:
-                        print(self.queue.qsize())
                 conn.sendall(data)
