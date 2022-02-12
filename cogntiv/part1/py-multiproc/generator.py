@@ -1,5 +1,4 @@
 import pickle
-import datetime
 
 def generate_vectors(num: int, noise=True) -> bytes:
     res = []
