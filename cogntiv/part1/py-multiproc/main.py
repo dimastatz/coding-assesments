@@ -29,11 +29,11 @@ def aggregate(host='127.0.0.1', port=65432):
                 if not data:
                     count = 0
                     break
-                count +=1
-                if count % 1000 == 0:
-                    print('chunk done')
+                count += len(data)
+                
+                print('chunk done', count)
 
-                #conn.sendall(data)
+                # conn.sendall(data)
             
 
 
