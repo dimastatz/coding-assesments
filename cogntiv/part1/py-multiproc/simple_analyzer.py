@@ -17,12 +17,13 @@ class SimpleAnalyzer():
             
     def generate(self, size=1000, vec_size=50, is_noisy=False) -> Iterator[bytes]:
         for _ in range(size):
-            if not is_noisy or not self.should_drop():
+            if not self.should_drop(is_noisy):
                 yield pickle.dumps(np.random.normal(0, 0.1, vec_size))
         yield pickle.dumps(self.marker)
 
-    def should_drop(self, interval=2000) -> bool:
-        return np.random.randint(interval, size=1)[0] == 0
+    def should_drop(self, is_noisy: bool, interval=2000) -> bool:
+        return np.random.randint(interval, size=1)[0] == 0 if is_noisy else False
+    
 
     def consume_queue(self):
         ac_rates, vectors = [], []

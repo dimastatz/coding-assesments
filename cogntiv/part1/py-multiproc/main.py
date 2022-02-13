@@ -30,13 +30,13 @@ def initializer():
 
 if __name__ == "__main__":
     try:
-        is_noisy = sys.argv[1] if len(sys.argv) > 1 else False
-    
+        
+        is_noisy = True if 'add_noise' in sys.argv else False
         pool = Pool(2, initializer=initializer)
         pool.apply_async(aggregate)
-        pool.apply_async(generate, kwds={'is_noisy': is_noisy})
+        pool.apply_async(generate, kwds={'is_noisy': bool(is_noisy)})
         pool.close()
-        input("Hit enter to terminate \n")
+        input('Started with noisy={}. Press any key to exit\n'.format(is_noisy))
     except KeyboardInterrupt:
         pass
     finally:
