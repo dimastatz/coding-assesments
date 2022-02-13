@@ -1,5 +1,14 @@
 import numpy as np
 
+
+def get_matrix_stats(matrix: np.array) -> list:
+    res = []
+    for i in range(matrix.shape[1]):
+        column = matrix[:, i]
+        res.append((np.mean(column), np.std(column)))
+    return res
+
+
 M = None
 
 for i in range(5):
@@ -9,4 +18,5 @@ for i in range(5):
     else:
         M = np.vstack([M, V])
 
-    print(M, M.shape[0])
+print(M, M.shape[0])
+get_matrix_stats(M)

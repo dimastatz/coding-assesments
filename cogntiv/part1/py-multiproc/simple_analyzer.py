@@ -9,12 +9,12 @@ from typing import Iterator
 
 class SimpleAnalyzer():
     def __init__(self, start_worker=False) -> None:
+        self.matrix = None
         self.force_exit = False
         self.queue: Queue = Queue()
         self.marker: str = 'session_end'
         self.report_file: str = self.get_report_file()
-        self.matrix = None
-
+        
         if start_worker:
             self.worker = threading.Thread(target=self.consume_queue)
             self.worker.start()
@@ -33,6 +33,13 @@ class SimpleAnalyzer():
     
     def is_marker(self, item) -> bool:
         return isinstance(item, str) and item == self.marker
+
+    def get_matrix_stats(self, matrix: np.array) -> list:
+        res = []
+        for i in range(matrix.shape[1]):
+            column = matrix[:, i]
+            res.append((np.mean(column), np.std(column)))
+        return res
     
     def consume_queue(self):
         ac_rates, vectors = [], []
@@ -47,12 +54,21 @@ class SimpleAnalyzer():
                     vectors.clear()
                     self.matrix = None
                 else:
-                    if self.matrix is None:
-                        self.matrix = np.array([item])
-                    else:
-                        self.matrix = np.vstack([self.matrix, item])
-
+                    self.matrix = np.array([item]) if self.matrix is None \
+                        else np.vstack([self.matrix, item])
+                    
+                    self.submit_matrix_report()
                     vectors.append(item)
+    
+    def submit_matrix_report(self):
+        if self.matrix.shape[0] == 100:
+            stats = self.get_matrix_stats(self.matrix)
+            report = 'matrix stats {}'.format(stats)
+            with open(self.report_file, 'a') as f:
+                print('mat', self.matrix.shape)
+                f.writelines([report, '\n'])
+            self.matrix == None
+
     
     def submit_report(self, ac_rates, vectors):
         packet_loss = 'Packet Loss WARNING' if len(vectors) < 1000 else '' 
