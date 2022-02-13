@@ -18,7 +18,8 @@ cd coding-assesments/cogntiv/part1/py-multiproc/
 python3 -V 
 ```
 This project is tested on Python 3.10.0. It should work OK on python 3.6+
-### This project uses standard Python modules and [numpy](https://numpy.org/). Ensure that the numpy is installed by running 
+### NumPy
+This project uses standard Python modules and [numpy](https://numpy.org/). Ensure that the numpy is installed by running 
 ```Python
 import numpy
 print numpy.__version__
