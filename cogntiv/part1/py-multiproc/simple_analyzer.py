@@ -1,4 +1,3 @@
-from curses import beep
 import time
 import pickle
 import threading
@@ -38,8 +37,8 @@ class SimpleAnalyzer():
                     data_ac = len(vectors), np.mean(ac_rates), np.std(ac_rates)
                     
                     packet_loss = 'Packet Loss WARNING' if len(vectors) < 1000 else '' 
-                    print('Acquisition (rate, mean, std) = ', data_ac, packet_loss)
-                    
+                    print('Acquisition stats (rate, mean, std) = ', data_ac, packet_loss)
+
                     vectors = []
                 else:
                     vectors.append(item)
