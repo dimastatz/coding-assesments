@@ -1,3 +1,4 @@
+import os
 import time
 import pickle
 import threading
@@ -11,6 +12,7 @@ class SimpleAnalyzer():
         self.force_exit = False
         self.queue: Queue = Queue()
         self.marker: str = 'session_end'
+        self.report_file: str = self.get_report_file()
         if start_worker:
             self.worker = threading.Thread(target=self.consume_queue)
             self.worker.start()
@@ -21,10 +23,15 @@ class SimpleAnalyzer():
                 yield pickle.dumps(np.random.normal(0, 0.1, vec_size))
         yield pickle.dumps(self.marker)
 
-    def should_drop(self, is_noisy: bool, interval=2000) -> bool:
+    def get_report_file(self):
+        return '{}-{}.txt'.format(os.getcwd(), time.time_ns() // 1000)
+
+    def should_drop(self, is_noisy: bool, interval=3000) -> bool:
         return np.random.randint(interval, size=1)[0] == 0 if is_noisy else False
     
-
+    def is_marker(self, item) -> bool:
+        return isinstance(item, str) and item == self.marker
+    
     def consume_queue(self):
         ac_rates, vectors = [], []
         while not self.force_exit:
@@ -32,18 +39,23 @@ class SimpleAnalyzer():
                 time.sleep(0.1)
             else:
                 item = pickle.loads(self.queue.get())
-                
-                if isinstance(item, str) and item == self.marker:
+                if self.is_marker(item):
                     ac_rates.append(len(vectors))
-                    data_ac = len(vectors), np.mean(ac_rates), np.std(ac_rates)
-                    
-                    packet_loss = 'Packet Loss WARNING' if len(vectors) < 1000 else '' 
-                    print('Acquisition stats (rate, mean, std) = ', data_ac, packet_loss)
-
-                    vectors = []
+                    self.submit_report(ac_rates, vectors)
+                    vectors.clear()
                 else:
                     vectors.append(item)
+    
+    def submit_report(self, ac_rates, vectors):
+        packet_loss = 'Packet Loss WARNING' if len(vectors) < 1000 else '' 
+        report = 'Acquisition rate={}, mean={}, std={}. {}'.format(
+            len(vectors), np.mean(ac_rates), np.std(ac_rates), packet_loss)
 
+        with open(self.report_file, 'a') as f:
+            print(report)
+            f.writelines([report, '\n'])
             
+
+    
             
         
