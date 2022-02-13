@@ -52,11 +52,9 @@ class SimpleAnalyzer():
                     ac_rates.append(len(vectors))
                     self.submit_report(ac_rates, vectors)
                     vectors.clear()
-                    self.matrix = None
                 else:
                     self.matrix = np.array([item]) if self.matrix is None \
                         else np.vstack([self.matrix, item])
-                    
                     self.submit_matrix_report()
                     vectors.append(item)
     
@@ -65,9 +63,8 @@ class SimpleAnalyzer():
             stats = self.get_matrix_stats(self.matrix)
             report = 'matrix stats {}'.format(stats)
             with open(self.report_file, 'a') as f:
-                print('mat', self.matrix.shape)
                 f.writelines([report, '\n'])
-            self.matrix == None
+            self.matrix = None
 
     
     def submit_report(self, ac_rates, vectors):
