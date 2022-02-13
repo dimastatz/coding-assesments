@@ -12,10 +12,8 @@ def generate(is_noisy: bool):
     analyzer = SimpleAnalyzer()
     while True:
         start = time.time()
-        rand = np.random.randint(100, size=1)[0]
-        if not is_noisy or rand > 2:
-            for vector in analyzer.generate():
-                socket.send_message(vector)
+        for vector in analyzer.generate(is_noisy=is_noisy):
+            socket.send_message(vector)
         span = time.time() - start
         time.sleep(1 - span)
     
@@ -45,4 +43,5 @@ if __name__ == "__main__":
         pool.terminate()
         pool.join()        
         print("Py-Multiproc Test is Exiting!")
+        exit(0)
     
