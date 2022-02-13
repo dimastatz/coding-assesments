@@ -27,4 +27,12 @@ If not installed, please install by running
 ```bash
 pip3 install numpy
 ```
+5. Run the code by 
+```bash
+python3 main.py add_noise
+```
+or run it without noise
+```bash
+python3 main.py
+```
 
