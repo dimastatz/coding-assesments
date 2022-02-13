@@ -13,6 +13,8 @@ class SimpleAnalyzer():
         self.queue: Queue = Queue()
         self.marker: str = 'session_end'
         self.report_file: str = self.get_report_file()
+        self.matrix = None
+
         if start_worker:
             self.worker = threading.Thread(target=self.consume_queue)
             self.worker.start()
@@ -43,7 +45,13 @@ class SimpleAnalyzer():
                     ac_rates.append(len(vectors))
                     self.submit_report(ac_rates, vectors)
                     vectors.clear()
+                    self.matrix = None
                 else:
+                    if self.matrix is None:
+                        self.matrix = np.array([item])
+                    else:
+                        self.matrix = np.vstack([self.matrix, item])
+
                     vectors.append(item)
     
     def submit_report(self, ac_rates, vectors):
