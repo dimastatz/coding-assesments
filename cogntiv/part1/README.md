@@ -5,9 +5,10 @@ Write a small Python application with two processes, running on the same machine
 - [click to see the full task description](./part_1.md)
 
 ## HOW TO
-- Clone the Github repo: 
+1. Clone the Github repo: 
 ```bash 
 git clone git@github.com:dimastatz/coding-assesments.git
 ```
-- Clone the Github repo:
+2. Navigate to py-multproc folder:
+``` bash cd coding-assesments/cogntiv/part1/py-multiproc/ ```
 
